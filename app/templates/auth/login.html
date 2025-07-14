@@ -1,0 +1,53 @@
+{# =============================================================
+   login.html – Inicio de sesión (todo en español, sin scripts inline)
+   ============================================================= #}
+{% extends "base.html" %}
+{% block title %}Iniciar sesión – Casa de Playa Alcossebre{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block modal %}
+{% if not current_user.is_authenticated %}
+<div class="modal fade" id="loginModal" tabindex="-1" aria-modal="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" action="{{ url_for('auth.login') }}">
+        {{ form.hidden_tag() }}
+
+        <!-- Cabecera -->
+        <div class="modal-header bg-ocean text-white">
+          <h5 class="modal-title mb-0">¿Quién eres?</h5>
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Cerrar"></button>
+        </div>
+
+        <!-- Selección -->
+        <div class="modal-body">
+          <label for="{{ form.user.id_for_label }}"
+                 class="form-label fw-semibold">
+            {{ form.user.label.text }}
+          </label>
+          {{ form.user(class="form-select",
+                       id=form.user.id,
+                       autofocus=True) }}
+        </div>
+
+        <!-- Botón -->
+        <div class="modal-footer">
+          {{ form.submit(class="btn btn-coral w-100") }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if not current_user.is_authenticated %}
+<script src="{{ url_for('static', filename='js/login-modal.js') }}"
+        nonce="{{ csp_nonce() }}" defer></script>
+{% endif %}
+{% endblock %}

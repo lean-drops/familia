@@ -1,0 +1,18 @@
+/* ── calendar.css Ergänzung ────────────────────────────────────────────── */
+
+/* 1. Titel umbrechen & nur im Balken zeigen */
+.fc-daygrid-event, .fc-timegrid-event {
+  white-space: normal;          /* Zeilenumbruch erlauben */         /* turn0search2 */
+  overflow-wrap: anywhere;      /* Lange Namen umbrechen */           /* turn0search9 */
+}
+
+/* 2. Papierkorb‑Styling */
+.trash-bin {
+  pointer-events: none;         /* nur visuell, nicht anklickbar     */
+  opacity: .8;
+  transition: transform .2s ease;
+}
+.trash-bin.show {
+  pointer-events: auto;
+  transform: translate(-50%, -10%);
+}

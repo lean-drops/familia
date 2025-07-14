@@ -1,0 +1,109 @@
+/* ────────────────────────────────────────────────
+   8. BookingModal  · 100 % Theme‑Aware, No Bootstrap‑Blue
+   ──────────────────────────────────────────────── */
+
+/* — Grundlayout ---------------------------------------------------- */
+#bookingModal .modal-dialog{
+  width:100%;
+  max-width:clamp(320px,90vw,700px);
+  margin:clamp(1rem,4vh,2rem) auto;
+}
+#bookingModal .modal-content{
+  background:var(--glass-bg);
+  backdrop-filter:blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(180%);
+  border:var(--glass-border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  /* Bootstrap‑Variablen überschreiben, um sämtliches Blau loszuwerden */
+  --bs-modal-header-border-color:transparent;
+  --bs-modal-footer-border-color:transparent;
+  --bs-focus-ring-color:rgba(var(--clr-coral-rgb,255,124,107),.35);
+  --bs-focus-ring-width:.25rem;
+}
+html[data-theme='dark'] #bookingModal .modal-content{
+  --bs-focus-ring-color:rgba(var(--clr-reef-rgb,136,192,208),.35);
+}
+
+/* — Header & Footer ----------------------------------------------- */
+#bookingModal .modal-header,
+#bookingModal .modal-footer{
+  background:transparent;
+  border:0;
+  padding:1.5rem;
+}
+#bookingModal .modal-title{
+  font-family:var(--ff-display);
+  font-weight:700;
+  font-size:1.5rem;
+  color:inherit;
+}
+
+/* — Close‑Button farbneutral -------------------------------------- */
+#bookingModal .btn-close{
+  filter:invert(0) grayscale(100%) opacity(.85);
+  transition:filter .15s;
+}
+#bookingModal .btn-close:hover{filter:invert(0) grayscale(0%) opacity(1);}
+html[data-theme='dark'] #bookingModal .btn-close{
+  filter:invert(1) grayscale(100%) opacity(.85);
+}
+html[data-theme='dark'] #bookingModal .btn-close:hover{
+  filter:invert(1) grayscale(0%) opacity(1);
+}
+
+/* — Formular‑Elemente --------------------------------------------- */
+#bookingModal input,
+#bookingModal select,
+#bookingModal textarea{
+  width:100%;
+  padding:.6rem .9rem;
+  border-radius:.5rem;
+  font-family:var(--ff-base);
+  color:inherit;
+  background:rgba(255,255,255,.25);
+  border:1px solid rgba(0,0,0,.08);
+  accent-color:var(--clr-coral);          /* Checkbox / Radio */
+  transition:border-color .15s,box-shadow .15s;
+}
+#bookingModal input:focus,
+#bookingModal select:focus,
+#bookingModal textarea:focus{
+  outline:0;
+  border-color:var(--clr-coral);
+  box-shadow:0 0 0 .25rem rgba(var(--clr-coral-rgb,255,124,107),.35);
+}
+html[data-theme='dark'] #bookingModal input,
+html[data-theme='dark'] #bookingModal select,
+html[data-theme='dark'] #bookingModal textarea{
+  background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.12);
+  accent-color:var(--clr-reef);           /* heller Tick im Dark‑Mode */
+}
+html[data-theme='dark'] #bookingModal input:focus,
+html[data-theme='dark'] #bookingModal select:focus,
+html[data-theme='dark'] #bookingModal textarea:focus{
+  border-color:var(--clr-reef);
+  box-shadow:0 0 0 .25rem rgba(var(--clr-reef-rgb,136,192,208),.35);
+}
+
+/* — Buttons im Modal ---------------------------------------------- */
+#bookingModal .btn-primary{                /* falls Bootstrap‑Klasse verwendet */
+  background:var(--clr-coral);
+  border-color:var(--clr-coral);
+  color:var(--clr-text-light);
+}
+#bookingModal .btn-primary:hover,
+#bookingModal .btn-primary:focus-visible{
+  background:var(--clr-palm);
+  border-color:var(--clr-palm);
+  color:var(--clr-text-light);
+  box-shadow:0 .25rem .75rem -.15rem rgba(0,0,0,.35);
+}
+
+/* — Responsive Tweaks --------------------------------------------- */
+@media (max-width:576px){
+  #bookingModal .modal-content{border-radius:.75rem}
+  #bookingModal .modal-title{font-size:1.25rem}
+}

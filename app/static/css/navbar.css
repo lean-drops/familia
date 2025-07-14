@@ -1,0 +1,66 @@
+/* ============================================================
+   navbar.css · Estilos dedicados a la barra y su dropdown
+   Light & Dark · Responsive · Sin scripts inline
+   ============================================================ */
+
+/* ---------- 1 · Variables específicas ---------------------- */
+:root{
+  --dropdown-bg   : rgba(255,255,255,.96);
+  --dropdown-color: var(--clr-text-dark);
+}
+html[data-theme='dark'],
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme='light']){
+    --dropdown-bg   : rgba(0,0,0,.90);
+    --dropdown-color: var(--clr-text-light);
+  }
+}
+
+/* ---------- 2 · Re‑ubicar el botón de tema ----------------- */
+#themeToggle{
+  position:absolute;
+  top:.5rem; left:.5rem;          /* esquina sup‑izq */
+  z-index:1055;                  /* por encima de todo */
+  --bs-btn-border-color:transparent;
+}
+#countdownBadge{                 /* bajamos un poco la chapa de llegada */
+  top:3.25rem;
+}
+
+/* ---------- 3 · Dropdown adaptativo (claro / oscuro) ------- */
+.dropdown-menu{
+  background:var(--dropdown-bg);
+  color:var(--dropdown-color);
+  border:0;
+  border-radius:.5rem;
+  backdrop-filter:blur(.5rem);
+  min-width:clamp(10rem, 20vw, 14rem);
+  padding:.25rem;
+}
+.dropdown-item{
+  border-radius:.35rem;
+  padding:.5rem 1rem;
+}
+.dropdown-item:hover,
+.dropdown-item:focus{
+  background:rgba(var(--clr-coral-rgb,255,111,94),.15);
+  color:inherit;
+}
+.dropdown-item.active,
+.dropdown-item:active{
+  background:var(--clr-coral);
+  color:var(--clr-text-light);
+}
+
+/* ---------- 4 · Botón de dropdown (usuario) ---------------- */
+.navbar .dropdown-toggle{
+  --bs-btn-color       : var(--clr-text-light);
+  --bs-btn-border-color: var(--clr-text-light);
+  --bs-btn-hover-bg    : var(--clr-text-light);
+  --bs-btn-hover-color : var(--clr-ocean);
+}
+
+/* ---------- 5 · Animaciones seguras ----------------------- */
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;}
+}

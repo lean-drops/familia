@@ -1,0 +1,95 @@
+/* ============================================================
+   loginModal.css · Estilos exclusivos del modal de inicio
+   Light & Dark  – Responsive  – 100% compatibles con CSP
+   ============================================================ */
+
+/* ---------- 1 · Variables heredadas ------------------------ */
+/*  (Nada que hacer: usamos las mismas variables que app.css)  */
+
+/* ---------- 2 · Ajustes globales del modal ----------------- */
+#loginModal .modal-dialog{
+  width:100%;
+  max-width:clamp(18rem, 90vw, 42rem);
+  margin:clamp(1rem, 4vh, 2rem) auto;
+  container-type:inline-size;          /* habilita container queries */
+}
+
+#loginModal .modal-content{
+  background:var(--glass-bg);
+  backdrop-filter:blur(1.25rem) saturate(180%);
+  border:var(--glass-border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+}
+
+/* ---------- 3 · Cabecera, cuerpo y pie --------------------- */
+#loginModal .modal-header,
+#loginModal .modal-footer{
+  background:transparent;
+  border:0;
+  padding:1.25rem 1.5rem;
+}
+
+#loginModal .modal-title{
+  font-weight:700;
+  font-size:1.35rem;
+  color:inherit;
+}
+
+#loginModal .btn-close{
+  filter:invert(0);
+  opacity:.8;
+}
+
+html[data-theme='dark'] #loginModal .btn-close{
+  filter:invert(1);
+}
+
+/* ---------- 4 · Campos de formulario ----------------------- */
+#loginModal select,
+#loginModal button.btn,
+#loginModal .form-select{
+  background:rgba(255,255,255,.22);
+  border:1px solid rgba(0,0,0,.1);
+  border-radius:.5rem;
+  padding:.55rem .9rem;
+  color:inherit;
+  width:100%;
+  transition:background .15s ease;
+}
+
+html[data-theme='dark'] #loginModal select,
+html[data-theme='dark'] #loginModal .form-select{
+  background:rgba(0,0,0,.28);
+  border:1px solid rgba(255,255,255,.16);
+}
+
+/* ---------- 5 · Modo oscuro automático --------------------- */
+/*  (Respeta preferencia SO y override vía data-theme)         */
+@media (prefers-color-scheme:dark){
+  html:not([data-theme='light']){
+    /* mismo bloque que html[data-theme='dark'] */
+    #loginModal .btn-close{filter:invert(1);}
+    #loginModal select,
+    #loginModal .form-select{
+      background:rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.16);
+    }
+  }
+}
+
+/* ---------- 6 · Container queries para pantallas estrechas - */
+@container (max-width:24rem){
+  #loginModal .modal-header,
+  #loginModal .modal-footer{
+    padding:1rem;
+  }
+  #loginModal .modal-title{font-size:1.1rem;}
+  #loginModal .btn-coral{font-size:.9rem;}
+}
+
+/* ---------- 7 · Motion‑safe -------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important;}
+}

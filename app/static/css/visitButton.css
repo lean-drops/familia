@@ -1,0 +1,93 @@
+/* -----------------------------------------------------------
+   visitButton.css · polished CTA "Besuch in Alcossebre"
+   works with existing .btn-coral class
+   ----------------------------------------------------------- */
+
+:root{
+  /* tie in to already defined tokens (fallback values here) */
+  --clr-coral:      #ff6f5e;
+  --clr-coral-dark: #e45d4e;
+  --clr-reef:       #4ecbb7;
+  --clr-reef-dark:  #3ab0a0;
+  --clr-text-light: #ffffff;
+  --btn-radius:     .85rem;
+}
+
+/* Core button ------------------------------------------------ */
+.btn-coral{
+  /* Gradient background */
+  background:linear-gradient(135deg,var(--clr-coral) 0%,var(--clr-reef) 100%);
+  color:var(--clr-text-light);
+
+  /* Fluid padding & font */
+  padding:clamp(.65em,.9vw + .55em,1em) clamp(1.35em,2.3vw + 1em,2.3em);
+  font-size:clamp(1rem, .3vw + .95rem, 1.15rem);
+  font-weight:600;
+  line-height:1.25;
+
+  /* Layout */
+  display:inline-flex;
+  align-items:center;
+  gap:.6rem;
+
+  /* Depth */
+  border:none;
+  border-radius:var(--btn-radius);
+  box-shadow:
+      0 .15rem .4rem rgba(0,0,0,.16),
+      0 .6rem 1.4rem -.25rem rgba(0,0,0,.28);
+
+  /* Transition */
+  transition:
+    background .25s ease,
+    transform  .18s ease,
+    box-shadow .25s ease;
+}
+
+/* Hover / focus --------------------------------------------- */
+.btn-coral:hover,
+.btn-coral:focus-visible{
+  background:linear-gradient(135deg,var(--clr-coral-dark) 0%,var(--clr-reef-dark) 100%);
+  transform:translateY(-2px);
+  box-shadow:
+      0 .25rem .6rem rgba(0,0,0,.18),
+      0 .9rem 1.6rem -.25rem rgba(0,0,0,.32);
+}
+
+/* Active (tap) ---------------------------------------------- */
+.btn-coral:active{
+  transform:translateY(0);           /* avoids jump on mobile */
+  box-shadow:
+      inset 0 1px 2px rgba(0,0,0,.25),
+      0 .3rem .8rem -.25rem rgba(0,0,0,.35);
+}
+
+/* Keyboard focus (WCAG 2.4.7) -------------------------------- */
+.btn-coral:focus-visible{
+  outline:3px solid rgba(255,255,255,.55);
+  outline-offset:3px;
+}
+
+/* Dark‑mode variant ----------------------------------------- */
+@media (prefers-color-scheme: dark){
+  .btn-coral{
+    background:linear-gradient(135deg,var(--clr-reef-dark) 0%,var(--clr-coral-dark) 100%);
+    box-shadow:
+        0 .15rem .4rem rgba(0,0,0,.5),
+        0 .6rem 1.4rem -.25rem rgba(0,0,0,.75);
+  }
+  .btn-coral:hover,
+  .btn-coral:focus-visible{
+    background:linear-gradient(135deg,var(--clr-reef) 0%,var(--clr-coral) 100%);
+  }
+  .btn-coral:focus-visible{
+    outline:3px solid rgba(78,203,183,.55); /* reef tone */
+  }
+}
+
+/* Motion‑safe: keep shadows static for reduced‑motion users -- */
+@media (prefers-reduced-motion: reduce){
+  .btn-coral{
+    transition:none;
+  }
+}
