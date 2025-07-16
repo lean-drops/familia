@@ -87,11 +87,8 @@
 {% endblock content %}
 
 {% block extra_js %}
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.js"
-          defer></script>
-  <script src="{{ url_for('static', filename='js/calendar.js') }}"
-          defer></script>
-  <script defer>
+  <script src="{{ url_for('static', filename='js/calendar.js') }}" defer></script>
+  <script nonce="{{ csp_nonce() }}" defer>
     /* Übergabe der nächsten Ankunft an JavaScript */
     window.NEXT_ARRIVAL = "{{ next_arrival.isoformat() if next_arrival else '' }}";
   </script>
