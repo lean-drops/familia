@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bookingModal.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/visitButton.css') }}">
+{% endblock %}
+
+{% block content %}
+  <header id="hero" class="vh-100 d-flex flex-column justify-content-center align-items-center text-center">
+    <h1 class="display-4 fw-bold">Bienvenidos a la Casa "Pedro" en  Alcossebre</h1>
+    <p class="lead">Coordina estancias – rápido, sencillo y móvil.</p>
+
+    <div class="mt-4">
+      {% if current_user.is_authenticated %}
+        <button class="btn btn-lg btn-coral shadow" data-bs-toggle="modal" data-bs-target="#bookingModal">
+          <i class="fa-solid fa-calendar-plus me-2"></i>
+          Registrar visita en Alcossebre
+        </button>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-coral shadow">
+          <i class="fa-solid fa-sign-in-alt me-2"></i>
+          Inicia sesión para registrar tu visita
+        </a>
+      {% endif %}
+    </div>
+  </header>
+{% endblock %}
+
+{% block modal %}{% endblock %}
+{% block extra_js %}{% endblock %}
