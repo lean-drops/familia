@@ -53,6 +53,28 @@ def _countdown(target: date) -> Dict[str, int]:
 # Routen
 # ---------------------------------------------------------------------------#
 @booking_bp.route("/")
+def index() -> str:
+    next_start = None
+    days_to_arrival = None
+    if current_user.is_authenticated:
+        next_start = (
+            Booking.query.filter(
+                Booking.user_id == current_user.id,
+                Booking.start_date >= date.today(),
+            )
+            .order_by(Booking.start_date)
+            .first()
+        )
+        if next_start:
+            days_to_arrival = (next_start.start_date - date.today()).days
+    return render_template(
+        "index.html",
+        next_arrival=next_start.start_date if next_start else None,
+        days_to_arrival=days_to_arrival,
+    )
+
+
+@booking_bp.route("/calendar")
 @login_required
 def calendar() -> str:
     form = BookingForm()
