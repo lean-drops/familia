@@ -9,10 +9,16 @@
 /* 2. Papierkorb‑Styling */
 .trash-bin {
   pointer-events: none;         /* nur visuell, nicht anklickbar     */
-  opacity: .8;
-  transition: transform .2s ease;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  transform: translate(-50%, 100%);
+  z-index: 1050;
+  opacity: 0;
+  transition: transform .2s ease, opacity .2s ease;
 }
 .trash-bin.show {
   pointer-events: auto;
   transform: translate(-50%, -10%);
+  opacity: .8;
 }

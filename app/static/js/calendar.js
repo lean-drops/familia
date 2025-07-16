@@ -28,6 +28,11 @@
     const calEl = document.getElementById('calendar');
     if (!calEl) return;
 
+    const deleteBin   = document.getElementById('deleteBin');
+    const detailsEl   = document.getElementById('detailsModal');
+    const detailsBody = document.getElementById('detailsBody');
+    const detailsModal = detailsEl ? bootstrap.Modal.getOrCreateInstance(detailsEl) : null;
+
     const calendar = new FullCalendar.Calendar(calEl, {
       locale: 'de-ch',
       timeZone: 'local',
@@ -43,6 +48,7 @@
       selectMirror: true,
       eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
       events: '/events',
+      editable: true,
 
       /* Date‑Range via Drag / Click → Modal füllen */
       select(selectionInfo) {
@@ -52,6 +58,28 @@
 
         openBookingModal(toISODate(selectionInfo.start), toISODate(endInclusive));
         calendar.unselect();
+      },
+
+      eventDidMount(arg) {
+        arg.el.addEventListener('click', (ev) => {
+          if (ev.detail === 2) {
+            showDetails(arg.event);
+          }
+        });
+      },
+
+      eventDrop(info) { updateBooking(info); },
+      eventResize(info) { updateBooking(info); },
+      eventDragStart() { deleteBin?.classList.add('show'); },
+      eventDragStop(info) {
+        if (!deleteBin) return;
+        const rect = deleteBin.getBoundingClientRect();
+        const x = info.jsEvent.clientX;
+        const y = info.jsEvent.clientY;
+        deleteBin.classList.remove('show');
+        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+          deleteBooking(info.event);
+        }
       },
     });
 
@@ -114,6 +142,34 @@
         /* 4 — Neu laden, damit FullCalendar aktualisierte Daten holt */
         window.location.reload();
       });
+    }
+
+    async function updateBooking(info) {
+      const res = await fetch(`/booking/${info.event.id}/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          start: toISODate(info.event.start),
+          end:   toISODate(info.event.end)
+        })
+      });
+      if (!res.ok) info.revert();
+    }
+
+    async function deleteBooking(event) {
+      await fetch(`/booking/${event.id}/delete`, { method: 'POST' });
+      calendar.refetchEvents();
+    }
+
+    function showDetails(event) {
+      if (!detailsModal || !detailsBody) return;
+      detailsBody.innerHTML = `
+        <p><strong>Gast:</strong> ${event.extendedProps.user}</p>
+        <p><strong>Begleitung:</strong> ${event.extendedProps.companions || '-'}</p>
+        <p><strong>Dauer:</strong> ${event.extendedProps.duration} Tage</p>
+        <p><strong>Von:</strong> ${toISODate(event.start)}<br>
+           <strong>Bis:</strong> ${toISODate(event.end)}</p>`;
+      detailsModal.show();
     }
 
     /* ── Live‑Countdown (optional) ─────────────────────────────────────── */

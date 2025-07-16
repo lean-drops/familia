@@ -142,17 +142,49 @@ def new_booking():
     return redirect(url_for("booking.calendar"))
 
 
+@booking_bp.route("/booking/<int:booking_id>/update", methods=["POST"])
+@login_required
+def update_booking(booking_id):
+    booking = Booking.query.get_or_404(booking_id)
+    if booking.user_id != current_user.id:
+        return jsonify({"error": "forbidden"}), 403
+
+    data = request.get_json() or {}
+    try:
+        booking.start_date = date.fromisoformat(data["start"])
+        booking.end_date = date.fromisoformat(data["end"])
+    except Exception:
+        return jsonify({"error": "invalid data"}), 400
+
+    db.session.commit()
+    return jsonify({"status": "ok"})
+
+
+@booking_bp.route("/booking/<int:booking_id>/delete", methods=["POST"])
+@login_required
+def delete_booking(booking_id):
+    booking = Booking.query.get_or_404(booking_id)
+    if booking.user_id != current_user.id:
+        return jsonify({"error": "forbidden"}), 403
+
+    db.session.delete(booking)
+    db.session.commit()
+    return jsonify({"status": "deleted"})
+
+
 @booking_bp.route("/events")
 @login_required
 def events():
     return jsonify([
         {
             "id": b.id,
-            "title": f"{b.user.name}"
-                     f"{' – ' + b.companions if b.companions else ''}",
+            "title": f"{b.user.name}",
+            "companions": b.companions,
             "start": b.start_date.isoformat(),
             "end": b.end_date.isoformat(),
             "color": b.user.color,
+            "user": b.user.name,
+            "duration": (b.end_date - b.start_date).days + 1,
         }
         for b in Booking.query.all()
     ])

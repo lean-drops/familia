@@ -63,6 +63,27 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal: Buchungsdetails anzeigen -->
+  <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title mb-0" id="detailsLabel">
+            <i class="fa-solid fa-circle-info me-2"></i>
+            Buchungsdetails
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="detailsBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Papierkorb für Drag&Drop-Löschen -->
+  <div id="deleteBin" class="trash-bin position-fixed bottom-0 end-0 translate-middle-x mb-4 me-4 d-none">
+    <i class="fa-solid fa-trash fa-3x text-danger"></i>
+  </div>
 {% endblock content %}
 
 {% block extra_js %}
