@@ -1,18 +1,117 @@
-/* ── calendar.css Ergänzung ────────────────────────────────────────────── */
+/* ==========================================================
+   calendar.css · Estilos exclusivos de la vista Calendario
+   v2.1 – Trash‑Bin aparece solo al Draggen · Jul 2025
+   ---------------------------------------------------------- */
 
-/* 1. Titel umbrechen & nur im Balken zeigen */
-.fc-daygrid-event, .fc-timegrid-event {
-  white-space: normal;          /* Zeilenumbruch erlauben */         /* turn0search2 */
-  overflow-wrap: anywhere;      /* Lange Namen umbrechen */           /* turn0search9 */
+/* 1 · TÍTULOS DE EVENTOS – Wrapping bonito en todas las vistas */
+.fc-event-title,                      /* genérico */
+.fc-daygrid-event .fc-event-title,    /* vista mes */
+.fc-timegrid-event .fc-event-title {  /* semana/día */
+  white-space: normal;      /* permite saltos de línea */
+  overflow-wrap: anywhere;  /* parte palabras largas */
+  line-height: 1.25;
 }
 
-/* 2. Papierkorb‑Styling */
-.trash-bin {
-  pointer-events: none;         /* nur visuell, nicht anklickbar     */
-  opacity: .8;
-  transition: transform .2s ease;
+/* 2 · SECCIÓN CALENDARIO (contenedor + fondo) ------------------------- */
+#calendar-section {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: var(--clr-ocean);
+  color: var(--clr-text-light);
+  overflow: hidden;
+  isolation: isolate;
 }
-.trash-bin.show {
+#calendar-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--hero-img-calendar) center/cover no-repeat;
+  filter: var(--hero-filter);
+  animation: kenburns 28s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) { #calendar-section::before { animation: none; } }
+
+#calendar {
+  width: 100%;
+  max-width: clamp(22rem, 100vw - 1.5rem, 80rem);
+  padding: clamp(.9rem, 2.4vw, 2.5rem);
+  background: var(--glass-bg);
+  backdrop-filter: blur(1.25rem);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  container-type: inline-size;
+  overflow-x: hidden;
+}
+
+/* FullCalendar tokens (colores) */
+.fc {
+  --fc-event-bg-color: var(--clr-coral);
+  --fc-event-border-color: var(--clr-coral);
+  --fc-today-bg-color: rgba(var(--clr-palm-rgb), .25);
+  --fc-now-indicator-color: var(--clr-ocean-light);
+  color: var(--clr-text-dark);
+  font-family: var(--ff-base);
+}
+.fc-toolbar-title { font-size: clamp(1.4rem, 2vw + 1rem, 3rem); font-weight: 700; }
+.fc-button { background: var(--clr-ocean); border: 0; font-weight: 500; transition: background .15s; }
+.fc-button:hover,
+.fc-button:focus-visible { background: var(--clr-ocean-light); }
+.fc-event {
+  display: flex;
+  align-items: center;
+  padding-inline: .5rem;
+  border-radius: .4rem;
+  aspect-ratio: 16/3;
+  font-size: clamp(.65rem, .3vw + .7rem, .9rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .15);
+}
+
+/* 3 · TRASH‑BIN FLOTANTE ---------------------------------------------- */
+#trashBin {
+  position: fixed;
+  left: 50%;
+  bottom: -80px;           /* START escondido */
+  transform: translateX(-50%);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1055;           /* sobre FullCalendar */
+  background: var(--clr-coral);
+  color: var(--clr-text-light);
+  padding: .75rem 1.25rem;
+  border-radius: 9999px;   /* pill */
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+  transition: bottom .3s ease, opacity .3s ease;
+}
+#trashBin.show {            /* se añade desde calendar.js onDrag */
+  bottom: 20px;             /* visibilidad */
+  opacity: .9;
   pointer-events: auto;
-  transform: translate(-50%, -10%);
 }
+#trashBin i { margin-right: .4rem; }
+
+/* 4 · CONTAINER QUERIES (responsive tweaks) --------------------------- */
+@container (max-width: 600px) {
+  #calendar { padding: clamp(.9rem, 4vw, 1.2rem); }
+  .fc-event { font-size: .75rem; }
+  .fc-toolbar-title { font-size: clamp(1.2rem, 4vw + 1rem, 1.8rem); }
+  .fc-toolbar-chunk { flex-wrap: wrap; gap: .25rem; }
+}
+
+/* 5 · BACKGROUND PARA VISTA CALENDAR‑PAGE (si se usa .calendar-bg) ---- */
+.calendar-bg { position: relative; background: transparent; isolation: isolate; overflow: hidden; }
+.calendar-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -5;
+  background: var(--hero-img-calendar) center/cover no-repeat;
+  filter: var(--hero-filter);
+  animation: kenburns 28s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) { .calendar-bg::before { animation: none; } }

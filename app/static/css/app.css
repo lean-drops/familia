@@ -19,9 +19,9 @@ body{
 :root{
   /* Core colours */
   --clr-sand:#f6f2ea;           --clr-sand-dark:#dcd4c6;
-  --clr-coral:#ff6f5e;          --clr-coral-dark:#e45d4e;
+  --clr-coral:#ff6f5e;          --clr-coral-dark: #4b3e3e;
   --clr-ocean:#0d4e6c;          --clr-ocean-light:#3fa3cc;
-  --clr-reef:#4ecbb7;           --clr-reef-dark:#3ab0a0;
+  --clr-reef: #0e332b;           --clr-reef-dark:#3ab0a0;
   --clr-palm:#6fa46d;           --clr-palm-rgb:111,164,109;
   --clr-text-dark:#1c1c1c;      --clr-text-light:#ffffff;
 
