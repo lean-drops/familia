@@ -100,7 +100,9 @@ h1,h2,h3,h4,h5,h6{word-wrap:break-word;}
 /* ---------- 7 · HERO ---------------------------------------------------- */
 #hero{position:relative;overflow:hidden;isolation:isolate;
   color:var(--clr-text-light);text-shadow:0 2px 8px rgba(0,0,0,.6);
-  background:var(--clr-ocean);}
+  background:var(--clr-ocean);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;min-height:100vh;height:100svh;padding:0 1rem;}
 #hero::before{content:"";position:absolute;inset:0;z-index:-2;
   background:var(--hero-img-main) center/cover no-repeat;
   filter:var(--hero-filter);animation:kenburns 28s ease-in-out infinite alternate;}
@@ -125,6 +127,11 @@ h1,h2,h3,h4,h5,h6{word-wrap:break-word;}
 @supports not (animation-timeline: view()){
   #hero h1,
   #hero p{opacity:1;}
+}
+
+@media (max-width:420px){
+  #hero h1{font-size:2.2rem;}
+  #hero p{font-size:1.25rem;}
 }
 
 /* ---------- 8 · CTA BUTTON (.btn‑coral) -------------------------------- */
