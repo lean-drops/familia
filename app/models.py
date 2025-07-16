@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 """
-app/models.py  –  Zentrales Datenmodell der Beach‑House‑App
+app/models.py  –  Zentrales Datenmodell der Beach-House-App
 ────────────────────────────────────────────────────────────────────────────
 Enthält:
-• SQLAlchemy‑Basiskonfiguration (db, migrate, login_manager)
-• Models: Family, User (mit Passwort‑Hash & Farbcode), Booking, Invitation
-• Hilfs‑ und Validierungsmethoden (overlaps, set_password, check_password)
-Dieses File ist eigenständig lauffähig und erfordert keine weiteren
-Platzhalter oder Dummy‑Elemente.
+• SQLAlchemy-Basiskonfiguration (db, migrate, login_manager)
+• Models: Family, User, Booking, Invitation
+• Hilfs- und Validierungsmethoden (overlaps, set_password, check_password)
+Nur behutsame Erweiterung: Booking.nights + Booking.duration
 """
 from __future__ import annotations
 
@@ -21,11 +20,11 @@ from sqlalchemy import CheckConstraint, Index, UniqueConstraint
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # ──────────────────────────────────────────────────────────────────────────
-# Basis‑Objekte für App‑Factory
+# Basis-Objekte für App-Factory
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
-login_manager.login_view = "auth.login"   # Endpunkt für @login_required‑Redirect
+login_manager.login_view = "auth.login"   # Endpunkt für @login_required-Redirect
 
 # ──────────────────────────────────────────────────────────────────────────
 # MODELS
@@ -41,9 +40,9 @@ class Family(db.Model):
 class User(db.Model, UserMixin):
     __tablename__ = "users"
 
-    id          = db.Column(db.Integer, primary_key=True)
+    id            = db.Column(db.Integer, primary_key=True)
     # Auth ---------------------------------------------------------------
-    username     = db.Column(db.String(64), unique=True, nullable=False)
+    username      = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
 
     # Profil -------------------------------------------------------------
@@ -60,18 +59,18 @@ class User(db.Model, UserMixin):
         UniqueConstraint("first_name", "last_name", name="uq_user_fullname"),
     )
 
-    # Convenience‑Properties --------------------------------------------
+    # Convenience-Properties --------------------------------------------
     @property
     def name(self) -> str:
         return f"{self.first_name} {self.last_name}"
 
-    # Password‑Helpers ---------------------------------------------------
+    # Password-Helpers ---------------------------------------------------
     def set_password(self, password: str) -> None:
         """Speichert einen sicheren Hash des Passworts."""
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password: str) -> bool:
-        """Vergleicht Klartext‑Passwort mit dem gespeicherten Hash."""
+        """Vergleicht Klartext-Passwort mit dem gespeicherten Hash."""
         return check_password_hash(self.password_hash, password)
 
 
@@ -83,6 +82,7 @@ class Booking(db.Model):
     start_date = db.Column(db.Date,    nullable=False)
     end_date   = db.Column(db.Date,    nullable=False)
     companions = db.Column(db.String(255))          # optionale Begleitpersonen
+    nights     = db.Column(db.Integer, nullable=False, default=1, server_default="1")  # NEU
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship("User", backref="bookings")
@@ -96,13 +96,19 @@ class Booking(db.Model):
     @staticmethod
     def overlaps(start: date, end: date):
         """
-        Liefert einen Query‑Objekt‑Filter, der Buchungen zurückgibt, die sich
+        Liefert einen Query-Filter, der Buchungen zurückgibt, die sich
         mit dem Intervall [start, end] überschneiden.
         """
         return Booking.query.filter(
             Booking.end_date >= start,
             Booking.start_date <= end,
         )
+
+    # ---------------------------------------------------------------
+    @property
+    def duration(self) -> int:
+        """Gibt die tatsächliche Aufenthalts-Dauer in Nächten zurück."""
+        return (self.end_date - self.start_date).days + 1
 
 
 class Invitation(db.Model):
