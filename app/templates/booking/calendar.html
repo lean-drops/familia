@@ -1,77 +1,81 @@
 {# app/templates/booking/calendar.html #}
 {% extends "base.html" %}
-
 {% block title %}Kalender{% endblock %}
 
 {% block head_extra %}
-  <link rel="stylesheet"
-        href="{{ url_for('static', filename='css/calendar.css') }}">
-<!-- ①  FullCalendar‑Bundle (JS + injected CSS)  -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.js"
-        integrity="sha384-WN6a…dein‑SRI‑Hash…"
-        crossorigin="anonymous"></script>
+  <!-- FullCalendar – nur EIN Bundle, mit korrektem SRI -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.js"
+          integrity="sha384-w+/36vzr+9muA3AD1xeLMQQj4GbMTCfzuUVqeZfjlk8S6UXWT5WMKuO8j+lxmtiH"
+          crossorigin="anonymous"></script>
 
+  <!-- Projekt-CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/calendar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cal-modal.css') }}">
 {% endblock head_extra %}
 
 {% block content %}
-  <section id="calendar-section" class="py-5">
-    <div class="container-xl">
-      <div id="calendar" class="shadow-lg rounded-4 overflow-hidden"></div>
+  <!-- Kalender-Container -------------------------------------------------->
+  <section id="cal-section">
+    <div id="cal-wrapper">
+      <div id="cal-calendar"></div>
     </div>
   </section>
 
-  <!-- Modal: Aufenthalt anlegen -->
-  <div class="modal fade" id="bookingModal" tabindex="-1"
-       aria-labelledby="bookingLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0">
-        <form id="bookingForm"
-              method="post"
-              action="{{ url_for('booking.new_booking') }}">
-          {{ form.hidden_tag() }}
+  <!-- MODAL · Buchung anlegen ------------------------------------------->
+  <div id="cal-modal-booking" class="cal-modal" aria-hidden="true" role="dialog">
+    <div class="cal-modal__dialog">
+      <form id="cal-booking-form"
+            method="post"
+            action="{{ url_for('booking.new_booking') }}">
+        {{ form.hidden_tag() }}
 
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title mb-0" id="bookingLabel">
-              <i class="fa-solid fa-calendar-plus me-2"></i>
-              Neuen Aufenthalt eintragen
-            </h5>
-            <button type="button" class="btn-close btn-close-white"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
+        <header class="cal-modal__header">
+          <h2 class="cal-modal__title">Neuen Aufenthalt eintragen</h2>
+          <button type="button" class="cal-modal__close" data-close>×</button>
+        </header>
 
-          <div class="modal-body">
-            <div class="row g-3">
-              <div class="col-12 col-md-6">
-                {{ form.start_date.label(class="form-label") }}
-                {{ form.start_date(class="form-control") }}
-              </div>
-              <div class="col-12 col-md-6">
-                {{ form.end_date.label(class="form-label") }}
-                {{ form.end_date(class="form-control") }}
-              </div>
-              <div class="col-12">
-                {{ form.companions.label(class="form-label mt-3") }}
-                {{ form.companions(class="form-control") }}
-              </div>
-            </div>
+        <div class="cal-modal__body">
+          <div class="cal-field">
+            {{ form.start_date.label }} {{ form.start_date(class="cal-input") }}
           </div>
+          <div class="cal-field">
+            {{ form.end_date.label }} {{ form.end_date(class="cal-input") }}
+          </div>
+          <div class="cal-field">
+            {{ form.companions.label }} {{ form.companions(class="cal-input") }}
+          </div>
+        </div>
 
-          <div class="modal-footer bg-light">
-            {{ form.submit(class="btn btn-success w-100") }}
-          </div>
-        </form>
+        <footer class="cal-modal__footer">
+          {{ form.submit(class="cal-btn cal-btn--primary") }}
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL · Buchungs-Details ------------------------------------------>
+  <div id="cal-modal-detail" class="cal-modal" aria-hidden="true" role="dialog">
+    <div class="cal-modal__dialog">
+      <header class="cal-modal__header">
+        <h2 class="cal-modal__title">Details</h2>
+        <button type="button" class="cal-modal__close" data-close>×</button>
+      </header>
+      <div id="cal-modal-detail-body" class="cal-modal__body">
+        <!-- JS füllt hier die Infos ein -->
       </div>
+      <footer class="cal-modal__footer">
+        <button class="cal-btn" data-close>Schließen</button>
+      </footer>
     </div>
   </div>
 {% endblock content %}
 
 {% block extra_js %}
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.js"
-          defer></script>
-  <script src="{{ url_for('static', filename='js/calendar.js') }}"
-          defer></script>
-  <script defer>
-    /* Übergabe der nächsten Ankunft an JavaScript */
+  <script defer
+          src="{{ url_for('static', filename='js/calendar.js') }}"
+          nonce="{{ nonce() }}"></script>
+  <script defer nonce="{{ nonce() }}">
     window.NEXT_ARRIVAL = "{{ next_arrival.isoformat() if next_arrival else '' }}";
   </script>
 {% endblock extra_js %}
