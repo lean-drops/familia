@@ -1,0 +1,94 @@
+/* ----------------------------------------------------------
+   cl-modal.css · Styling exklusiv für das Estancia‑Modal
+   (kein Bootstrap‑Styling notwendig)
+   ---------------------------------------------------------- */
+
+/* ---------- Grundaufbau ---------------------------------- */
+.cl-modal-dialog{
+  max-width:38rem; width:92vw; margin:clamp(1rem,4vh,2rem) auto;
+}
+.cl-modal-content{
+  background:var(--glass-bg);
+  backdrop-filter:blur(var(--glass-blur)) saturate(180%);
+  border:var(--glass-border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  display:flex; flex-direction:column;
+}
+
+/* ---------- Header --------------------------------------- */
+.cl-modal-header{
+  padding:1.5rem 1.5rem 1.25rem;
+  background:var(--clr-ocean);
+  color:var(--clr-text-light);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.cl-modal-title{font-size:1.35rem;font-weight:700;margin:0;}
+.cl-modal-close{
+  width:1.25rem;height:1.25rem;cursor:pointer;
+  background:none;border:0;position:relative;opacity:.85;
+}
+.cl-modal-close::before,
+.cl-modal-close::after{
+  content:"";position:absolute;inset:0;margin:auto;
+  width:1.25rem;height:2px;background:currentColor;
+}
+.cl-modal-close::before{transform:rotate(45deg);}
+.cl-modal-close::after {transform:rotate(-45deg);}
+.cl-modal-close:hover{opacity:1;}
+
+/* ---------- Body ----------------------------------------- */
+.cl-modal-body{padding:1.5rem;}
+.cl-modal-grid{
+  display:grid;gap:1rem;
+  grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));
+}
+.cl-modal-field{display:flex;flex-direction:column;gap:.35rem;}
+.cl-modal-field.cl-modal-full{grid-column:1/-1;}
+.cl-modal-label{font-weight:500;font-size:.9rem;}
+.cl-modal-input{
+  padding:.6rem .85rem;border-radius:.55rem;border:1px solid transparent;
+  background:rgba(255,255,255,.2);color:inherit;font:inherit;
+}
+html[data-theme='dark'] .cl-modal-input{
+  background:rgba(0,0,0,.25);border-color:rgba(255,255,255,.14);
+}
+.cl-modal-input:focus{outline:2px solid var(--clr-reef);outline-offset:1px;}
+
+/* ---------- Footer --------------------------------------- */
+.cl-modal-footer{
+  padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:.75rem;
+  background:var(--glass-bg);backdrop-filter:blur(var(--glass-blur));
+}
+
+/* ---------- Buttons -------------------------------------- */
+.cl-modal-btn{
+  padding:.7rem 1rem;border:0;border-radius:.6rem;
+  font-weight:600;font-size:1rem;cursor:pointer;color:var(--clr-text-light);
+  transition:background .24s,transform .18s,box-shadow .24s;
+}
+.cl-modal-btn:focus-visible{outline:3px solid rgba(var(--reef-rgb),.45);outline-offset:2px;}
+.cl-modal-btn--save{
+  background:linear-gradient(135deg,var(--clr-success),var(--clr-reef));
+}
+.cl-modal-btn--save:hover{background:linear-gradient(135deg,var(--clr-success-dark),var(--clr-reef-dark));}
+.cl-modal-btn--delete{
+  background:linear-gradient(135deg,var(--clr-coral),var(--clr-coral-dark));
+}
+.cl-modal-btn--delete:hover{background:linear-gradient(135deg,#d24f40,#b94439);}
+.cl-modal-btn:active{transform:translateY(1px);}
+/* Responsive Event‑Titel + schneller Tap                               */
+/* clamp() gleicht Viewport‑Größen aus, JS schrumpft bei Überlauf weiter */
+.fc-event-title {
+  font-size: clamp(11px, 0.8vw + 0.6rem, 15px);   /* fluid type  :contentReference[oaicite:8]{index=8} */
+  line-height: 1.2;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* beschleunigt Tap, verhindert 300‑ms‑Delay   :contentReference[oaicite:9]{index=9} */
+#calendar {
+  touch-action: manipulation;
+}

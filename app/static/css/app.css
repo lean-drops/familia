@@ -1,66 +1,62 @@
 /* -------------------------------------------------
-   app.css · Global · Hero · Calendar · BookingModal
-   Beach (Light) & Nord (Dark) · Juli 2025
-   Harmonised palette · Fluid UI · AA contrast
-   NIE Überbreite → kein horizontaler Scrollbalken
+   app.css · Global · Hero · Calendar · cl‑Modal
+   Beach (Light) & Nord (Dark) · v2  (Juli 2025)
+   ─ Einheitliche Farb‑Palette
+   ─ Mehr Luft & klarere Kontraste
+   ─ Countdown‑Badge polished
+   ─ Komplett responsive + Motion‑safe
    -------------------------------------------------- */
 
 /* ---------- 1 · WEB‑FONTS ------------------------------------------------ */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Great+Vibes&family=Inter:wght@300;400;500;700&display=swap');
 
-/* ---------- 2 · GLOBAL GUARD (Gegen Overflow) --------------------------- */
-html,
-body{
-  overflow-x:hidden;            /* blockt horizontale Scrollbalken */
-  max-width:100vw;              /* Layout wird niemals breiter */
-}
+/* ---------- 2 · GLOBAL GUARD -------------------------------------------- */
+html,body{overflow-x:hidden;max-width:100vw;}
 
 /* ---------- 3 · LIGHT MODE – Beach Palette ------------------------------ */
 :root{
-  /* Core colours */
-  --clr-sand:#f6f2ea;           --clr-sand-dark:#dcd4c6;
-  --clr-coral: #423735;          --clr-coral-dark: #110f0f;
-  --clr-ocean:#0d4e6c;          --clr-ocean-light:#3fa3cc;
-  --clr-reef:#4ecbb7;           --clr-reef-dark: #dedede;
-  --clr-palm:#6fa46d;           --clr-palm-rgb:111,164,109;
-  --clr-text-dark:#1c1c1c;      --clr-text-light:#ffffff;
+  /* Basis‑Farben */
+  --clr-sand:#f6f2ea;          --clr-sand-strong:#e8e0d4;
+  --clr-coral:#ff6f5e;         --clr-coral-dark:#e35846;
+  --clr-ocean:#0d4e6c;         --clr-ocean-light:#3fa3cc;
+  --clr-reef:#4ecbb7;          --clr-reef-dark:#31b09c;
+  --clr-success:#34c46d;       --clr-success-dark:#28a158;
+  --clr-text-dark:#202020;     --clr-text-light:#ffffff;
 
-  /* RGB helpers */
-  --clr-coral-rgb:255,111,94;
-  --clr-reef-rgb:78,203,183;
-  --clr-ocean-rgb:13,78,108;
+  /* RGB‑Helper */
+  --reef-rgb:78,203,183;       --coral-rgb:255,111,94; --ocean-rgb:13,78,108;
 
-  /* Images */
-  --hero-img-main:url("../img/alco.jpg");
+  /* Medien‑Assets */
+  --hero-img:url("../img/alco.jpg");
   --hero-img-calendar:url("../img/calendar-hero.jpg");
-  --hero-filter:brightness(.62) saturate(1.1);
+  --hero-filter:brightness(.6) saturate(1.05);
 
-  /* Typography & depth */
+  /* Typografie + Tiefenstaffelung */
   --ff-display:"Cinzel Decorative",serif;
   --ff-script:"Great Vibes",cursive;
   --ff-base:"Inter",system-ui,sans-serif;
   --radius-lg:1rem;
-  --shadow-lg:0 1.25rem 2.5rem rgba(0,0,0,.25);
+  --shadow-lg:0 1.25rem 2.5rem rgba(0,0,0,.28);
 
-  /* Glass */
+  /* Glas‑Modus */
   --glass-bg:rgba(255,255,255,.14);
   --glass-border:1px solid rgba(255,255,255,.28);
   --glass-blur:1.5rem;
 }
 
-/* ---------- 4 · DARK MODE – Nord Palette ------------------------------- */
+/* ---------- 4 · DARK MODE – Nord Palette -------------------------------- */
 html[data-theme='dark'],
 :root:where([data-theme='dark']){
-  --clr-sand:#2e3440;           --clr-sand-dark: rgba(33, 6, 40, 0.72);
-  --clr-coral:#88c0d0;          --clr-coral-dark:#72a9ba;
-  --clr-ocean:#eceff4;          --clr-ocean-light:#e5e9f0;
-  --clr-reef:#8fbcbb;           --clr-reef-dark:#7aa6a4;
-  --clr-palm:#e8b177;           --clr-palm-rgb:232,177,119;
-  --clr-text-dark:#eceff4;      --clr-text-light:#ffffff;
+  --clr-sand:#2e3440;          --clr-sand-strong:#272d37;
+  --clr-coral:#88c0d0;         --clr-coral-dark:#72a9ba;
+  --clr-ocean:#e5e9f0;         --clr-ocean-light:#d8dee9;
+  --clr-reef:#8fbcbb;          --clr-reef-dark:#7aa6a4;
+  --clr-success:#37c871;       --clr-success-dark:#2ea85e;
+  --clr-text-dark:#eceff4;     --clr-text-light:#ffffff;
 
-  --hero-img-main:url("../img/dark-alco.jpg");
+  --hero-img:url("../img/dark-alco.jpg");
   --hero-img-calendar:url("../img/calendar-hero-dark.jpg");
-  --hero-filter:brightness(.82) saturate(1.15);
+  --hero-filter:brightness(.8) saturate(1.15);
 
   --glass-bg:rgba(0,0,0,.35);
   --glass-border:1px solid rgba(255,255,255,.16);
@@ -69,16 +65,10 @@ html[data-theme='dark'],
   html:not([data-theme='light']){color-scheme:dark;}
 }
 
-/* ---------- 5 · RESET & BASE ------------------------------------------- */
+/* ---------- 5 · RESET & BASE ------------------------------------------- */
 *,*::before,*::after{box-sizing:border-box;}
 html,body{scroll-behavior:smooth;}
-body{
-  font-family:var(--ff-base);
-  background:var(--clr-sand);
-  color:var(--clr-text-dark);
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-}
+
 img,picture,video,canvas,svg{display:block;max-width:100%;}
 button{cursor:pointer;border:0;background:none;font:inherit;}
 a{text-decoration:none;color:inherit;}
@@ -92,170 +82,111 @@ h1,h2,h3,h4,h5,h6{word-wrap:break-word;}
   --bs-btn-hover-bg:var(--clr-text-light);
   --bs-btn-hover-color:var(--clr-ocean);
 }
-.dropdown-menu{background:rgba(0,0,0,.85);backdrop-filter:blur(.5rem);border:0;border-radius:.5rem;}
+.dropdown-menu{
+  background:rgba(0,0,0,.85);
+  backdrop-filter:blur(.5rem);
+  border:0;border-radius:.5rem;
+}
 .dropdown-item.active,
 .dropdown-item:active{background:var(--clr-coral-dark);color:var(--clr-text-light);}
-.badge{font-weight:600;border-radius:.5rem;}
+.badge{font-weight:600;border-radius:.6rem;}
 
 /* ---------- 7 · HERO ---------------------------------------------------- */
-#hero{position:relative;overflow:hidden;isolation:isolate;
-  color:var(--clr-text-light);text-shadow:0 2px 8px rgba(0,0,0,.6);
-  background:var(--clr-ocean);}
+#hero{
+  position:relative;overflow:hidden;isolation:isolate;
+  color:var(--clr-text-light);text-shadow:0 2px 8px rgba(0,0,0,.65);}
 #hero::before{content:"";position:absolute;inset:0;z-index:-2;
-  background:var(--hero-img-main) center/cover no-repeat;
-  filter:var(--hero-filter);animation:kenburns 28s ease-in-out infinite alternate;}
+  background:var(--hero-img) center/cover no-repeat;
+  filter:var(--hero-filter);animation:kenburns 30s ease-in-out infinite alternate;}
 #hero::after{content:"";position:absolute;inset:0;z-index:-1;
-  background:linear-gradient(115deg,rgba(var(--clr-coral-rgb),.55) 0%,
-              rgba(var(--clr-reef-rgb),.45) 60%,rgba(var(--clr-ocean-rgb),.55) 100%);
+  background:linear-gradient(115deg,
+              rgba(var(--coral-rgb),.55) 0%,
+              rgba(var(--reef-rgb),.35) 45%,
+              rgba(var(--ocean-rgb),.55) 100%);
   mix-blend-mode:overlay;}
 @keyframes kenburns{from{transform:scale(1);}to{transform:scale(1.12);}}
-@media (prefers-reduced-motion:reduce){#hero::before{animation:none;}}
 
-#hero h1{font-family:var(--ff-display);
-  font-size:clamp(2.4rem,4vw + 1rem,5.2rem);
-  font-weight:700;margin-bottom:.25em;text-shadow:0 0 4px rgba(0,0,0,.85);
-  -webkit-text-stroke:1px rgba(0,0,0,.35);opacity:0;animation:fade .8s forwards;
-  animation-timeline:view();max-inline-size:100%;}
-#hero p{font-family:var(--ff-script);font-size:clamp(1.4rem,2vw + .5rem,2.8rem);
-  opacity:0;animation:fade .8s .12s forwards;animation-timeline:view();
-  max-inline-size:100%;}
-@keyframes fade{to{opacity:1;translate:0 0;}}
+/* Titel & Untertitel */
+#hero h1{
+  font-family:var(--ff-display);
+  font-size:clamp(2.3rem,4.2vw + 1rem,5.2rem);
+  font-weight:700;margin-bottom:.25em;
+  -webkit-text-stroke:1px rgba(0,0,0,.4);
+  opacity:0;animation:fade-in .9s forwards;}
+#hero p{
+  font-family:var(--ff-script);
+  font-size:clamp(1.3rem,1.8vw + .6rem,2.6rem);
+  opacity:0;animation:fade-in .9s .15s forwards;}
+@keyframes fade-in{to{opacity:1;transform:none;}}
 
-/* --- Fallback: Wenn View‑Timeline nicht unterstützt ------------------- */
-@supports not (animation-timeline: view()){
-  #hero h1,
-  #hero p{opacity:1;}
-}
+/* ---------- 9 · COUNTDOWN BADGE ---------------------------------------- */
+#countdownBadge{
+  font-size:clamp(.78rem,1vw + .46rem,1rem);font-weight:600;
+  padding:.38rem .9rem;letter-spacing:.15px;
+  border-radius:2rem;box-shadow:0 0 .25rem rgba(0,0,0,.25);
+  background:var(--clr-success);color:var(--clr-text-light);
+  transition:background .3s,translate .4s cubic-bezier(.34,1.56,.64,1);}
+html[data-theme='dark'] #countdownBadge{background:var(--clr-success-dark);}
+@keyframes pop{0%{translate:-50% -90% scale(.6);opacity:0;}
+80%{translate:-50% 12% scale(1.05);}100%{translate:-50% 0 scale(1);opacity:1;}}
+#countdownBadge{animation:pop .8s forwards;}
+@media(max-width:420px){#countdownBadge{font-size:.72rem;padding:.28rem .7rem;}}
 
-/* ---------- 8 · CTA BUTTON (.btn‑coral) -------------------------------- */
-.btn-coral{
-  --btn-bg-1:var(--clr-coral);
-  --btn-bg-2:var(--clr-reef);
-  --btn-bg-hover-1:var(--clr-coral-dark);
-  --btn-bg-hover-2:var(--clr-reef-dark);
-  --btn-shadow:0 .5rem 1.25rem -.25rem rgba(0,0,0,.32);
-
-  display:inline-flex;align-items:center;gap:.55rem;
-  padding:clamp(.65em,.9vw + .55em,1em) clamp(1.25em,2vw + 1em,2.25em);
-  font-weight:600;border-radius:.8rem;
-  background:linear-gradient(135deg,var(--btn-bg-1),var(--btn-bg-2));
-  color:var(--clr-text-light);box-shadow:var(--btn-shadow);
-  transition:background .25s,transform .18s,box-shadow .25s;}
-.btn-coral:hover,
-.btn-coral:focus-visible{background:linear-gradient(135deg,var(--btn-bg-hover-1),var(--btn-bg-hover-2));
-  transform:translateY(-2px);box-shadow:0 .75rem 1.5rem -.25rem rgba(0,0,0,.35);}
-.btn-coral:active{transform:translateY(1px);box-shadow:0 .4rem 1rem -.25rem rgba(0,0,0,.4);}
-.btn-coral:focus-visible{outline:3px solid rgba(var(--clr-coral-rgb),.45);outline-offset:2px;}
-
-/* ---------- 9 · CALENDAR SECTION --------------------------------------- */
+/* ---------- 10 · CALENDAR SECTION -------------------------------------- */
 #calendar-section{position:relative;min-height:100vh;display:grid;place-items:center;
   background:var(--clr-ocean);color:var(--clr-text-light);overflow:hidden;isolation:isolate;}
 #calendar-section::before{content:"";position:absolute;inset:0;z-index:-2;
   background:var(--hero-img-calendar) center/cover no-repeat;
-  filter:var(--hero-filter);animation:kenburns 28s ease-in-out infinite alternate;}
-#calendar{width:100%;max-width:clamp(22rem,100vw - 1.5rem,80rem);
-  padding:clamp(.9rem,2.4vw,2.5rem);background:var(--glass-bg);
-  backdrop-filter:blur(1.25rem);border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-lg);container-type:inline-size;overflow-x:hidden;}
+  filter:var(--hero-filter);animation:kenburns 30s ease-in-out infinite alternate;}
+#calendar{
+  width:100%;max-width:clamp(22rem,100vw - 1.5rem,80rem);
+  padding:clamp(.9rem,2.4vw,2.4rem);
+  background:var(--glass-bg);backdrop-filter:blur(1.25rem);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);
+  container-type:inline-size;overflow-x:hidden;}
 
-
-
-/* ---------- 10 · BOOKING MODAL ----------------------------------------- */
+/* ---------- 11 · cl‑MODAL (Booking) ------------------------------------ */
 #bookingModal .modal-dialog{width:100%;max-width:clamp(20rem,90vw,46rem);
   margin:clamp(1rem,4vh,2rem) auto;}
-@media (min-width:992px){#bookingModal .modal-dialog{max-width:50rem;}}
-#bookingModal .modal-content{background:var(--glass-bg);
-  backdrop-filter:blur(var(--glass-blur)) saturate(180%);
-  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(180%);
-  border:var(--glass-border);border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-lg);overflow:hidden;}
-#bookingModal .modal-header,
-#bookingModal .modal-footer{border:0;background:transparent;padding:1.5rem;}
-#bookingModal .modal-title{font-weight:700;font-size:1.5rem;color:inherit;max-inline-size:100%;}
+@media(min-width:992px){#bookingModal .modal-dialog{max-width:48rem;}}
+#bookingModal .modal-content{
+  background:var(--glass-bg);backdrop-filter:blur(var(--glass-blur)) saturate(180%);
+  border:var(--glass-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden;}
+#bookingModal .modal-header,#bookingModal .modal-footer{
+  border:0;background:transparent;padding:1.5rem;}
+#bookingModal .modal-title{font-weight:700;font-size:1.5rem;}
 #bookingModal .btn-close{filter:invert(0);opacity:.8;}
 html[data-theme='dark'] #bookingModal .btn-close{filter:invert(1);}
 #bookingModal .modal-body{padding:1.5rem;line-height:1.55;}
-#bookingModal input,
-#bookingModal select,
-#bookingModal textarea{background:rgba(255,255,255,.25);
-  border:1px solid rgba(0,0,0,.08);border-radius:.5rem;
-  padding:.6rem .9rem;width:100%;color:inherit;}
+#bookingModal input,#bookingModal select,#bookingModal textarea{
+  background:rgba(255,255,255,.25);border:1px solid rgba(0,0,0,.1);
+  border-radius:.55rem;padding:.6rem .9rem;width:100%;color:inherit;}
 html[data-theme='dark'] #bookingModal input,
 html[data-theme='dark'] #bookingModal select,
 html[data-theme='dark'] #bookingModal textarea{
   background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.14);}
 
-/* ---------- 11 · GLASS UTILITIES --------------------------------------- */
+/* ---------- 12 · UTILITIES --------------------------------------------- */
 .bg-glass{background:var(--glass-bg);backdrop-filter:blur(1rem);
   border-radius:var(--radius-lg);border:var(--glass-border);}
-.btn-ocean{--bs-btn-bg:var(--clr-ocean);--bs-btn-border-color:var(--clr-ocean);
+.btn-ocean{
+  --bs-btn-bg:var(--clr-ocean);--bs-btn-border-color:var(--clr-ocean);
   --bs-btn-hover-bg:var(--clr-ocean-light);color:var(--clr-text-light);}
 
-/* ---------- 12 · MOTION‑SAFE ------------------------------------------- */
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.001ms!important;
-    animation-iteration-count:1!important;transition-duration:.001ms!important;}
+/* ---------- 13 · MOTION‑SAFE ------------------------------------------- */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.001ms!important;}
 }
 
-/* ---------- 13 · CONTAINER QUERIES ------------------------------------- */
+/* ---------- 14 · CONTAINER QUERIES ------------------------------------- */
 .container-fluid{container-type:inline-size;}
-@container (max-width:600px){
-  #calendar{padding:clamp(.9rem,4vw,1.2rem);}
+@container(max-width:600px){
+  #calendar{padding:clamp(.85rem,4.2vw,1.15rem);}
   .fc-event{font-size:.75rem;}
   .fc-toolbar-title{font-size:clamp(1.2rem,4vw + 1rem,1.8rem);}
   .fc-toolbar-chunk{flex-wrap:wrap;gap:.25rem;}
 }
-@container (max-width:700px){.display-4{font-size:2rem;}}
-
-/* ---------- 14 · CALENDAR VIEW BACKGROUND ------------------------------ */
-.calendar-bg{position:relative;background:transparent;isolation:isolate;overflow:hidden;}
-.calendar-bg::before{content:"";position:fixed;inset:0;z-index:-5;
-  background:var(--hero-img-calendar) center/cover no-repeat;
-  filter:var(--hero-filter);animation:kenburns 28s ease-in-out infinite alternate;}
-@media (prefers-reduced-motion:reduce){.calendar-bg::before{animation:none;}}
-/*  static/css/countdownBadge.css
-    — visuelles Tuning für den zentralen Countdown‑Badge
------------------------------------------------------------------ */
-
-/* Basis: etwas größer & auffälliger */
-#countdownBadge {
-  font-size: clamp(0.75rem, 1vw + 0.5rem, 1rem); /* skaliert sanft */
-  font-weight: 600;
-  line-height: 1.25rem;
-  padding: 0.35rem 0.75rem;
-  letter-spacing: 0.2px;
-  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.25);
-  /* Glatte Übergänge bei Live‑Updates */
-  transition: all 0.3s ease-in-out;
-}
-
-/* Farb‑Modus Dark → Badge leuchtet stärker */
-[data-theme="dark"] #countdownBadge {
-  background-color: #37C871;   /* etwas satteres Grün */
-  color: #ffffff;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-}
-
-/* Farb‑Modus Light → etwas dunklerer Text für Kontrast */
-[data-theme="light"] #countdownBadge {
-  background-color: #44D67A;
-  color: #f8f9fa;
-}
-
-/* Optional: sanftes ­„Aufpoppen“ beim Seiteneinstieg */
-@keyframes badge-pop {
-  0%   { transform: translate(-50%, -120%) scale(0.6); opacity: 0; }
-  80%  { transform: translate(-50%,  10%) scale(1.05); }
-  100% { transform: translate(-50%,   0)  scale(1.0);  opacity: 1; }
-}
-#countdownBadge {
-  animation: badge-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-/* Kleine Geräte: Badge schmaler, Schrift verkleinert */
-@media (max-width: 420px) {
-  #countdownBadge {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.6rem;
-  }
-}
+@container(max-width:700px){.display-4{font-size:2.1rem;}}

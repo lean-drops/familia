@@ -6,29 +6,30 @@ from app.models import Booking
 def register_context_processors(app):
     @app.context_processor
     def inject_next_arrivals():
-        # ‑‑ Globale nächste Ankunft (irgendein Gast) ‑‑
-        overall = (
-            Booking.query.filter(Booking.start_date >= date.today())
-            .order_by(Booking.start_date.asc()).first()
-        )
-        next_arrival_date = overall.start_date if overall else None
+        # globale Info – optional, hier nicht mehr benutzt
+        overall = (Booking.query
+                   .filter(Booking.start_date >= date.today())
+                   .order_by(Booking.start_date)
+                   .first())
 
-        # ‑‑ Nur für den eingelog gten Benutzer ‑‑
+        # persönliche nächste Anreise des eingeloggten Users
         own_next = None
-        days_to_arrival = None
+        own_days_to_arrival = None
         if current_user.is_authenticated:
-            own_next = (
-                Booking.query.filter(
-                    Booking.user_id == current_user.id,
-                    Booking.start_date >= date.today(),
-                )
-                .order_by(Booking.start_date.asc()).first()
-            )
+            own_next = (Booking.query
+                        .filter(Booking.user_id == current_user.id,
+                                Booking.start_date >= date.today())
+                        .order_by(Booking.start_date)
+                        .first())
             if own_next:
-                days_to_arrival = (own_next.start_date - date.today()).days
+                own_days_to_arrival = (own_next.start_date - date.today()).days
 
         return dict(
-            next_arrival_date=next_arrival_date,
-            next_arrival_user=overall.user.name if overall else None,
-            days_to_arrival=days_to_arrival,
+            # falls du die globale Info noch irgendwo brauchst
+            next_arrival_date = overall.start_date if overall else None,
+            next_arrival_user = overall.user.name if overall else None,
+
+            # *** exakt die Variablen, die base.html anspricht ***
+            own_next_arrival_date = own_next.start_date if own_next else None,
+            own_days_to_arrival   = own_days_to_arrival,
         )

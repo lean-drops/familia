@@ -1,65 +1,60 @@
-{# ---- booking/booking_modal.html ---------------------------------------
-   Self-contained Bootstrap-Modal für Aufenthalte
-   Wird in anderen Templates via  {% include 'booking/booking_modal.html' %}
-   eingebunden. Ersetzt den bisherigen Inline-Block.
------------------------------------------------------------------------- #}
-
-<div class="modal fade" id="bookingModal" tabindex="-1"
+{#  templates/booking/booking_modal.html  #}
+<div class="modal fade cl-modal" id="bookingModal" tabindex="-1"
      aria-labelledby="bookingLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0">
+  <div class="modal-dialog modal-dialog-centered cl-modal-dialog">
+    <div class="modal-content cl-modal-content">
       <form id="bookingForm"
             method="post"
             action="{{ url_for('booking.new_booking') }}">
         {{ form.hidden_tag() }}
 
-        <!-- Header -->
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title mb-0" id="bookingLabel">
-            <i class="fa-solid fa-calendar-plus me-2"></i>
-            Aufenthalt
-          </h5>
-          <button type="button" class="btn-close btn-close-white"
-                  data-bs-dismiss="modal" aria-label="Schließen"></button>
-        </div>
+        <!-- Cabecera -->
+        <header class="cl-modal-header">
+          <h2 id="bookingLabel" class="cl-modal-title">Estancia</h2>
+          <button type="button"
+                  class="cl-modal-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Cerrar"></button>
+        </header>
 
-        <!-- Body -->
-        <div class="modal-body">
-          <div class="row g-3">
+        <!-- Cuerpo -->
+        <section class="cl-modal-body">
+          <div class="cl-modal-grid">
 
-            {# Optionaler Titel (falls im WTForm definiert) #}
+            {# Campo opcional «Título» #}
             {% if form.title %}
-              <div class="col-12">
-                {{ form.title.label(class="form-label") }}
-                {{ form.title(class="form-control") }}
+              <div class="cl-modal-field">
+                {{ form.title.label(class="cl-modal-label") }}
+                {{ form.title(class="cl-modal-input") }}
               </div>
             {% endif %}
 
-            <div class="col-12 col-md-6">
-              {{ form.start_date.label(class="form-label") }}
-              {{ form.start_date(class="form-control") }}
+            <div class="cl-modal-field">
+              {{ form.start_date.label(class="cl-modal-label") }}
+              {{ form.start_date(class="cl-modal-input") }}
             </div>
-            <div class="col-12 col-md-6">
-              {{ form.end_date.label(class="form-label") }}
-              {{ form.end_date(class="form-control") }}
+
+            <div class="cl-modal-field">
+              {{ form.end_date.label(class="cl-modal-label") }}
+              {{ form.end_date(class="cl-modal-input") }}
             </div>
-            <div class="col-12">
-              {{ form.companions.label(class="form-label") }}
-              {{ form.companions(class="form-control") }}
+
+            <div class="cl-modal-field cl-modal-full">
+              {{ form.companions.label(class="cl-modal-label") }}
+              {{ form.companions(class="cl-modal-input") }}
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- Footer -->
-        <div class="modal-footer bg-light flex-column gap-2">
-          {{ form.submit(class="btn btn-success w-100") }}
+        <!-- Pie -->
+        <footer class="cl-modal-footer">
+          {{ form.submit(class="cl-modal-btn cl-modal-btn--save", value="Guardar") }}
           <button id="deleteBtn"
                   type="button"
-                  class="btn btn-danger w-100 d-none">
-            <i class="fa-solid fa-trash me-2"></i>
-            Löschen
+                  class="cl-modal-btn cl-modal-btn--delete d-none">
+            Eliminar
           </button>
-        </div>
+        </footer>
       </form>
     </div>
   </div>

@@ -1,38 +1,35 @@
 {# app/templates/booking/calendar.html #}
 {% extends "base.html" %}
 
-{% block title %}Kalender{% endblock %}
+{% block title %}Kalendario{% endblock %}
 
 {% block head_extra %}
-  <!-- ­­­──── Seiten-CSS ­­­──── -->
+  <!-- ­­­──── CSS específico de la página ­­­──── -->
   <link rel="stylesheet"
         href="{{ url_for('static', filename='css/calendar.css') }}">
 
-  <!-- ­­­──── FullCalendar-Bundle (JS + eingebettetes CSS) ­­­──── -->
+  <!-- ­­­──── FullCalendar (bundle) ­­­──── -->
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.js"
           integrity="sha384-w+/36vzr+9muA3AD1xeLMQQj4GbMTCfzuUVqeZfjlk8S6UXWT5WMKuO8j+lxmtiH"
           crossorigin="anonymous" defer></script>
 {% endblock head_extra %}
 
 {% block content %}
-  <!-- Kalender-Section -->
+  <!-- Sección calendario -->
   <section id="calendar-section" class="py-5">
     <div class="container-xl">
       <div id="calendar" class="shadow-lg rounded-4 overflow-hidden"></div>
     </div>
   </section>
-
-  {# Modal separat eingebunden #}
-  {% include 'booking/booking_modal.html' %}
+  {# ✖ KEIN weiteres Modal hier – kommt schon aus base.html #}
 {% endblock content %}
 
 {% block extra_js %}
-  <!-- Kalender-Logik -->
-  <script src="{{ url_for('static', filename='js/calendar.js') }}"
-          defer></script>
+  <!-- Lógica de calendario -->
+  <script src="{{ url_for('static', filename='js/calendar.js') }}" defer></script>
 
-  <!-- Nächste Ankunft an JS übergeben -->
+  <!-- Próxima llegada personal a JS -->
   <script defer>
-    window.NEXT_ARRIVAL = "{{ next_arrival.isoformat() if next_arrival else '' }}";
+    window.NEXT_ARRIVAL = "{{ own_next_arrival_date.isoformat() if own_next_arrival_date else '' }}";
   </script>
 {% endblock extra_js %}
