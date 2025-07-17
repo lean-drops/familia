@@ -1,20 +1,19 @@
-<!-- ============================================================
-   base.html – Versión todo‑en‑uno (incluye Hero + Modal)
-   ============================================================ -->
+{# ============================================================
+   base.html · Plantilla base (español)
+   Countdown zeigt die Tage BIS ZUR EIGENEN nächsten Anreise
+   ============================================================ #}
 <!doctype html>
 <html lang="es"
       data-bs-spy="scroll"
       data-bs-target="#mainNav"
       data-bs-offset="80"
-      {% if request.cookies.get('theme') %}
-        data-theme="{{ request.cookies.get('theme') }}"
-      {% endif %}>
+      {% if request.cookies.get('theme') %}data-theme="{{ request.cookies.get('theme') }}"{% endif %}>
 
   <head>
     <meta charset="utf-8">
-    <!-- Bloqueo de zoom -->
     <meta name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{% block title %}Casa de Playa Alcossebre{% endblock %}</title>
 
@@ -24,16 +23,12 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
           crossorigin="anonymous">
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/app.css') }}">
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/bookingModal.css') }}">
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/visitButton.css') }}">
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/navbar.css') }}">
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/login.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bookingModal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/visitButton.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 
     {% block head_extra %}{% endblock %}
   </head>
@@ -44,10 +39,11 @@
     <nav id="mainNav" class="navbar navbar-dark bg-transparent fixed-top">
       <div class="container-fluid justify-content-end position-relative">
 
-        {% if next_arrival %}
+        {# Zentraler persönlicher Countdown – nur wenn User & kommende Reise #}
+        {% if current_user.is_authenticated and own_next_arrival_date %}
           <span id="countdownBadge"
-                class="badge rounded-pill bg-success position-absolute top-0 start-0 ms-3 mt-3">
-            Llegada en …
+                class="badge rounded-pill bg-success position-absolute top-0 start-50 translate-middle-x mt-3">
+            {{ own_days_to_arrival }} días
           </span>
         {% endif %}
 
@@ -56,7 +52,12 @@
                 class="btn btn-outline-light me-2"
                 type="button"
                 aria-label="Cambiar tema">
-          <i class="fa-solid fa-moon"></i>
+          <i class="fa-solid
+             {% if request.cookies.get('theme','light') == 'light' %}
+                 fa-sun
+             {% else %}
+                 fa-moon
+             {% endif %}"></i>
         </button>
 
         <!-- Menú de usuario -->
@@ -64,22 +65,15 @@
         <div class="dropdown">
           <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">
             {{ current_user.name }}
-            {% if days_to_arrival is not none %}
-              <span class="badge bg-success ms-2">{{ days_to_arrival }}</span>
-            {% endif %}
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
             {% for u in current_user.query.order_by('last_name', 'first_name') %}
-              <li>
-                <a class="dropdown-item"
-                   href="{{ url_for('auth.switch_user', user_id=u.id) }}">{{ u.name }}</a>
-              </li>
+              <li><a class="dropdown-item"
+                     href="{{ url_for('auth.switch_user', user_id=u.id) }}">{{ u.name }}</a></li>
             {% endfor %}
             <li><hr class="dropdown-divider"></li>
-            <li>
-              <a class="dropdown-item text-danger"
-                 href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
-            </li>
+            <li><a class="dropdown-item text-danger"
+                   href="{{ url_for('auth.logout') }}">Cerrar sesión</a></li>
           </ul>
         </div>
         {% endif %}
@@ -87,10 +81,9 @@
     </nav>
 
     <!-- ═════ HERO ═════ -->
-    {% block hero %}
     <header id="hero"
             class="vh-100 d-flex flex-column justify-content-center align-items-center text-center">
-      <h1 class="display-4 fw-bold">Bienvenidos a la Casa "Pedro" en    Alcossebre</h1>
+      <h1 class="display-4 fw-bold">Bienvenidos a la Casa "Pedro" en Alcossebre</h1>
       <p class="lead">Coordina estancias – rápido, sencillo y móvil.</p>
 
       <div class="mt-4">
@@ -102,72 +95,28 @@
             Registrar visita en Alcossebre
           </button>
         {% else %}
-          <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-coral shadow">
+          <a class="btn btn-lg btn-coral shadow"
+             href="{{ url_for('auth.login') }}">
             <i class="fa-solid fa-sign-in-alt me-2"></i>
             Inicia sesión para registrar tu visita
           </a>
         {% endif %}
       </div>
     </header>
-    {% endblock %}
 
     <!-- ═════ CONTENIDO ═════ -->
     <main class="flex-grow-1">
       {% block content %}{% endblock %}
     </main>
 
-    <!-- ═════ BOOKING MODAL (visible por defecto; páginas pueden sobrescribir) ═════ -->
     {% block modal %}
-      {% if current_user.is_authenticated %}
-      <div class="modal fade" id="bookingModal" tabindex="-1"
-           aria-labelledby="bookingLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content border-0">
-            <form id="bookingForm"
-                  method="post"
-                  action="{{ url_for('booking.new_booking') }}">
-              {{ form.hidden_tag() }}
-
-              <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title mb-0" id="bookingLabel">
-                  <i class="fa-solid fa-calendar-plus me-2"></i>
-                  Neuen Aufenthalt eintragen
-                </h5>
-                <button type="button" class="btn-close btn-close-white"
-                        data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-
-              <div class="modal-body">
-                <div class="row g-3">
-                  <div class="col-12 col-md-6">
-                    {{ form.start_date.label(class="form-label") }}
-                    {{ form.start_date(class="form-control") }}
-                  </div>
-                  <div class="col-12 col-md-6">
-                    {{ form.end_date.label(class="form-label") }}
-                    {{ form.end_date(class="form-control") }}
-                  </div>
-                  <div class="col-12">
-                    {{ form.companions.label(class="form-label mt-3") }}
-                    {{ form.companions(class="form-control") }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="modal-footer bg-light">
-                {{ form.submit(class="btn btn-success w-100") }}
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      {% endif %}
+      {% include 'booking/booking_modal.html' %}
     {% endblock %}
 
     <!-- ═════ FOOTER ═════ -->
     <footer class="bg-dark text-white mt-auto py-3">
       <div class="container text-center small">
-        © {{ 2025 }} Familia Lahiguera · Tonev · Habegger
+        © 2025 Familia Lahiguera · Tonev · Habegger
       </div>
     </footer>
 
@@ -175,34 +124,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             nonce="{{ csp_nonce() }}" defer></script>
 
-    <!-- Alternancia de tema -->
-    <script nonce="{{ csp_nonce() }}">
-      (() => {
-        const root   = document.documentElement;
-        const toggle = document.getElementById('themeToggle');
-        const icon   = toggle.querySelector('i');
-        const key    = 'theme';
+    {% block extra_js %}
+      <script>
+        /* Übergibt NUR das persönliche Anreisedatum an site.js */
+        window.NEXT_ARRIVAL =
+          "{{ own_next_arrival_date.isoformat() if current_user.is_authenticated and own_next_arrival_date else '' }}";
+      </script>
 
-        const saved       = localStorage.getItem(key);
-        const systemPref  = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        const startTheme  = saved || systemPref;
-        root.dataset.theme = startTheme;
-        icon.classList.toggle('fa-sun',  startTheme === 'light');
-        icon.classList.toggle('fa-moon', startTheme === 'dark');
-
-        toggle.addEventListener('click', () => {
-          const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-          root.dataset.theme = next;
-          localStorage.setItem(key, next);
-          icon.classList.toggle('fa-sun',  next === 'light');
-          icon.classList.toggle('fa-moon', next === 'dark');
-        });
-      })();
-    </script>
-
-    <script src="{{ url_for('static', filename='js/site.js') }}"
-            nonce="{{ csp_nonce() }}" defer></script>
-
-    {% block extra_js %}{% endblock %}
+      <script src="{{ url_for('static', filename='js/site.js') }}"
+              nonce="{{ csp_nonce() }}" defer></script>
+    {% endblock %}
   </body>
 </html>

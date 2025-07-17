@@ -1,0 +1,66 @@
+{# ---- booking/booking_modal.html ---------------------------------------
+   Self-contained Bootstrap-Modal für Aufenthalte
+   Wird in anderen Templates via  {% include 'booking/booking_modal.html' %}
+   eingebunden. Ersetzt den bisherigen Inline-Block.
+------------------------------------------------------------------------ #}
+
+<div class="modal fade" id="bookingModal" tabindex="-1"
+     aria-labelledby="bookingLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0">
+      <form id="bookingForm"
+            method="post"
+            action="{{ url_for('booking.new_booking') }}">
+        {{ form.hidden_tag() }}
+
+        <!-- Header -->
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title mb-0" id="bookingLabel">
+            <i class="fa-solid fa-calendar-plus me-2"></i>
+            Aufenthalt
+          </h5>
+          <button type="button" class="btn-close btn-close-white"
+                  data-bs-dismiss="modal" aria-label="Schließen"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+          <div class="row g-3">
+
+            {# Optionaler Titel (falls im WTForm definiert) #}
+            {% if form.title %}
+              <div class="col-12">
+                {{ form.title.label(class="form-label") }}
+                {{ form.title(class="form-control") }}
+              </div>
+            {% endif %}
+
+            <div class="col-12 col-md-6">
+              {{ form.start_date.label(class="form-label") }}
+              {{ form.start_date(class="form-control") }}
+            </div>
+            <div class="col-12 col-md-6">
+              {{ form.end_date.label(class="form-label") }}
+              {{ form.end_date(class="form-control") }}
+            </div>
+            <div class="col-12">
+              {{ form.companions.label(class="form-label") }}
+              {{ form.companions(class="form-control") }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer bg-light flex-column gap-2">
+          {{ form.submit(class="btn btn-success w-100") }}
+          <button id="deleteBtn"
+                  type="button"
+                  class="btn btn-danger w-100 d-none">
+            <i class="fa-solid fa-trash me-2"></i>
+            Löschen
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

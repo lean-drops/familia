@@ -22,6 +22,9 @@ from flask_limiter.util import get_remote_address
 from flask_talisman import Talisman
 import sentry_sdk
 import structlog
+from flask_wtf import CSRFProtect
+from flask_wtf.csrf import generate_csrf
+from app.context import register_context_processors   # NEU
 
 from .models import db, migrate, login_manager           # SQLAlchemy, Alembic, Login
 from .auth.routes import auth_bp
@@ -52,6 +55,7 @@ def create_app() -> Flask:
 
     app = Flask(__name__)
     app.config.from_object(config_map[env])
+    register_context_processors(app)  #  NEU
 
     # ── Logging (Structlog → JSON) ───────────────────────────
     structlog.configure(
@@ -63,6 +67,8 @@ def create_app() -> Flask:
             structlog.processors.JSONRenderer(),
         ],
     )
+    csrf = CSRFProtect(app)
+    app.jinja_env.globals["csrf_token"] = generate_csrf
 
     # ── Sentry (optional) ────────────────────────────────────
     if (dsn := os.getenv("SENTRY_DSN")):

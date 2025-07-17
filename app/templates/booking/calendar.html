@@ -1,81 +1,38 @@
 {# app/templates/booking/calendar.html #}
 {% extends "base.html" %}
+
 {% block title %}Kalender{% endblock %}
 
 {% block head_extra %}
-  <!-- FullCalendar – nur EIN Bundle, mit korrektem SRI -->
-  <script defer
-          src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.js"
-          integrity="sha384-w+/36vzr+9muA3AD1xeLMQQj4GbMTCfzuUVqeZfjlk8S6UXWT5WMKuO8j+lxmtiH"
-          crossorigin="anonymous"></script>
+  <!-- ­­­──── Seiten-CSS ­­­──── -->
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/calendar.css') }}">
 
-  <!-- Projekt-CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/calendar.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/cal-modal.css') }}">
+  <!-- ­­­──── FullCalendar-Bundle (JS + eingebettetes CSS) ­­­──── -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.js"
+          integrity="sha384-w+/36vzr+9muA3AD1xeLMQQj4GbMTCfzuUVqeZfjlk8S6UXWT5WMKuO8j+lxmtiH"
+          crossorigin="anonymous" defer></script>
 {% endblock head_extra %}
 
 {% block content %}
-  <!-- Kalender-Container -------------------------------------------------->
-  <section id="cal-section">
-    <div id="cal-wrapper">
-      <div id="cal-calendar"></div>
+  <!-- Kalender-Section -->
+  <section id="calendar-section" class="py-5">
+    <div class="container-xl">
+      <div id="calendar" class="shadow-lg rounded-4 overflow-hidden"></div>
     </div>
   </section>
 
-  <!-- MODAL · Buchung anlegen ------------------------------------------->
-  <div id="cal-modal-booking" class="cal-modal" aria-hidden="true" role="dialog">
-    <div class="cal-modal__dialog">
-      <form id="cal-booking-form"
-            method="post"
-            action="{{ url_for('booking.new_booking') }}">
-        {{ form.hidden_tag() }}
-
-        <header class="cal-modal__header">
-          <h2 class="cal-modal__title">Neuen Aufenthalt eintragen</h2>
-          <button type="button" class="cal-modal__close" data-close>×</button>
-        </header>
-
-        <div class="cal-modal__body">
-          <div class="cal-field">
-            {{ form.start_date.label }} {{ form.start_date(class="cal-input") }}
-          </div>
-          <div class="cal-field">
-            {{ form.end_date.label }} {{ form.end_date(class="cal-input") }}
-          </div>
-          <div class="cal-field">
-            {{ form.companions.label }} {{ form.companions(class="cal-input") }}
-          </div>
-        </div>
-
-        <footer class="cal-modal__footer">
-          {{ form.submit(class="cal-btn cal-btn--primary") }}
-        </footer>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL · Buchungs-Details ------------------------------------------>
-  <div id="cal-modal-detail" class="cal-modal" aria-hidden="true" role="dialog">
-    <div class="cal-modal__dialog">
-      <header class="cal-modal__header">
-        <h2 class="cal-modal__title">Details</h2>
-        <button type="button" class="cal-modal__close" data-close>×</button>
-      </header>
-      <div id="cal-modal-detail-body" class="cal-modal__body">
-        <!-- JS füllt hier die Infos ein -->
-      </div>
-      <footer class="cal-modal__footer">
-        <button class="cal-btn" data-close>Schließen</button>
-      </footer>
-    </div>
-  </div>
+  {# Modal separat eingebunden #}
+  {% include 'booking/booking_modal.html' %}
 {% endblock content %}
 
 {% block extra_js %}
-  <script defer
-          src="{{ url_for('static', filename='js/calendar.js') }}"
-          nonce="{{ nonce() }}"></script>
-  <script defer nonce="{{ nonce() }}">
+  <!-- Kalender-Logik -->
+  <script src="{{ url_for('static', filename='js/calendar.js') }}"
+          defer></script>
+
+  <!-- Nächste Ankunft an JS übergeben -->
+  <script defer>
     window.NEXT_ARRIVAL = "{{ next_arrival.isoformat() if next_arrival else '' }}";
   </script>
 {% endblock extra_js %}

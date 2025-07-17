@@ -5,10 +5,10 @@
 
 :root{
   /* tie in to already defined tokens (fallback values here) */
-  --clr-coral: rgba(75, 72, 72, 0.73);
-  --clr-coral-dark: rgba(45, 44, 44, 0.59);
-  --clr-reef: #333131;
-  --clr-reef-dark: rgba(114, 111, 111, 0.63);
+  --clr-coral: #3d302f;
+  --clr-coral-dark: #050303;
+  --clr-reef:       #4ecbb7;
+  --clr-reef-dark:  #3ab0a0;
   --clr-text-light: #ffffff;
   --btn-radius:     .85rem;
 }

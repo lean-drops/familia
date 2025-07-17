@@ -19,9 +19,9 @@ body{
 :root{
   /* Core colours */
   --clr-sand:#f6f2ea;           --clr-sand-dark:#dcd4c6;
-  --clr-coral:#ff6f5e;          --clr-coral-dark: #4b3e3e;
+  --clr-coral: #423735;          --clr-coral-dark: #110f0f;
   --clr-ocean:#0d4e6c;          --clr-ocean-light:#3fa3cc;
-  --clr-reef: #0e332b;           --clr-reef-dark:#3ab0a0;
+  --clr-reef:#4ecbb7;           --clr-reef-dark: #dedede;
   --clr-palm:#6fa46d;           --clr-palm-rgb:111,164,109;
   --clr-text-dark:#1c1c1c;      --clr-text-light:#ffffff;
 
@@ -51,7 +51,7 @@ body{
 /* ---------- 4 · DARK MODE – Nord Palette ------------------------------- */
 html[data-theme='dark'],
 :root:where([data-theme='dark']){
-  --clr-sand:#2e3440;           --clr-sand-dark:#3b4252;
+  --clr-sand:#2e3440;           --clr-sand-dark: rgba(33, 6, 40, 0.72);
   --clr-coral:#88c0d0;          --clr-coral-dark:#72a9ba;
   --clr-ocean:#eceff4;          --clr-ocean-light:#e5e9f0;
   --clr-reef:#8fbcbb;           --clr-reef-dark:#7aa6a4;
@@ -158,18 +158,7 @@ h1,h2,h3,h4,h5,h6{word-wrap:break-word;}
   backdrop-filter:blur(1.25rem);border-radius:var(--radius-lg);
   box-shadow:var(--shadow-lg);container-type:inline-size;overflow-x:hidden;}
 
-/* FullCalendar tokens */
-.fc{--fc-event-bg-color:var(--clr-coral);--fc-event-border-color:var(--clr-coral);
-  --fc-today-bg-color:rgba(var(--clr-palm-rgb),.25);
-  --fc-now-indicator-color:var(--clr-ocean-light);color:var(--clr-text-dark);
-  font-family:var(--ff-base);}
-.fc-toolbar-title{font-size:clamp(1.4rem,2vw + 1rem,3rem);font-weight:700;}
-.fc-button{background:var(--clr-ocean);border:0;font-weight:500;transition:background .15s;}
-.fc-button:hover,.fc-button:focus-visible{background:var(--clr-ocean-light);}
-.fc-event{display:flex;align-items:center;padding-inline:.5rem;border-radius:.4rem;
-  aspect-ratio:16/3;font-size:clamp(.65rem,.3vw + .7rem,.9rem);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  box-shadow:0 1px 4px rgba(0,0,0,.15);}
+
 
 /* ---------- 10 · BOOKING MODAL ----------------------------------------- */
 #bookingModal .modal-dialog{width:100%;max-width:clamp(20rem,90vw,46rem);
@@ -224,3 +213,49 @@ html[data-theme='dark'] #bookingModal textarea{
   background:var(--hero-img-calendar) center/cover no-repeat;
   filter:var(--hero-filter);animation:kenburns 28s ease-in-out infinite alternate;}
 @media (prefers-reduced-motion:reduce){.calendar-bg::before{animation:none;}}
+/*  static/css/countdownBadge.css
+    — visuelles Tuning für den zentralen Countdown‑Badge
+----------------------------------------------------------------- */
+
+/* Basis: etwas größer & auffälliger */
+#countdownBadge {
+  font-size: clamp(0.75rem, 1vw + 0.5rem, 1rem); /* skaliert sanft */
+  font-weight: 600;
+  line-height: 1.25rem;
+  padding: 0.35rem 0.75rem;
+  letter-spacing: 0.2px;
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.25);
+  /* Glatte Übergänge bei Live‑Updates */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Farb‑Modus Dark → Badge leuchtet stärker */
+[data-theme="dark"] #countdownBadge {
+  background-color: #37C871;   /* etwas satteres Grün */
+  color: #ffffff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+}
+
+/* Farb‑Modus Light → etwas dunklerer Text für Kontrast */
+[data-theme="light"] #countdownBadge {
+  background-color: #44D67A;
+  color: #f8f9fa;
+}
+
+/* Optional: sanftes ­„Aufpoppen“ beim Seiteneinstieg */
+@keyframes badge-pop {
+  0%   { transform: translate(-50%, -120%) scale(0.6); opacity: 0; }
+  80%  { transform: translate(-50%,  10%) scale(1.05); }
+  100% { transform: translate(-50%,   0)  scale(1.0);  opacity: 1; }
+}
+#countdownBadge {
+  animation: badge-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Kleine Geräte: Badge schmaler, Schrift verkleinert */
+@media (max-width: 420px) {
+  #countdownBadge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+  }
+}
